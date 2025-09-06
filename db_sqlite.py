@@ -51,7 +51,6 @@ def insert_city(engine: Engine, name: str, state_uf: str) -> bool:
         return False
     
     state_uf = state_uf.strip().upper()
-    # Garante que o estado exista
     check = text("SELECT 1 FROM states WHERE uf = :uf")
     ins = text("INSERT OR IGNORE INTO cities (name, state_uf) VALUES (:name, :uf)")
     with engine.begin() as conn:
@@ -61,12 +60,12 @@ def insert_city(engine: Engine, name: str, state_uf: str) -> bool:
         res = conn.execute(ins, {"name": name.strip(), "uf": state_uf})
     return res.rowcount > 0
 
-def get_states(engine: Engine) -> List[Dict]:
+def get_states(engine):
     sql = text("SELECT uf, name FROM states ORDER BY name")
     with engine.begin() as conn:
-        rows = conn.execute(sql).mappings().all()
-    
-    return [r[0] for r in rows]
+        rows = conn.execute(sql).fetchall()
+    return [{"uf": r._mapping["uf"], "name": r._mapping["name"]} for r in rows]
+
 
 def get_cities_by_state(engine, uf: str) -> List[str]:
     sql = text("SELECT name FROM cities WHERE state_uf = :uf ORDER BY name")

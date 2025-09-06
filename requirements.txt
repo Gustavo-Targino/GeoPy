@@ -3,3 +3,6 @@ pymongo
 pandas
 python-dotenv
 SQLAlchemy
+folium
+streamlit-folium
+geopy

@@ -3,7 +3,6 @@ from typing import List, Dict, Optional
 from pymongo import MongoClient
 from dotenv import load_dotenv
 
-
 # Estrutura do documento:
 #   {
 #       "nome_local": str,
@@ -12,7 +11,6 @@ from dotenv import load_dotenv
 #       "coordenadas": {"latitude": float, "longitude": float},
 #       "descricao": str
 #   }
-
 
 _DB_NAME = "persistencia_geo"
 _COLLECTION = "locais"
