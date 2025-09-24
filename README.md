@@ -4,7 +4,7 @@ Este projeto demonstra o uso de **persistência poliglota** combinando **SQLite*
 
 ## Vídeo de demonstração
 
-[Assista o vídeo no YouTube](https://youtu.be/UrvXInnBxkE)
+[Assista o vídeo no YouTube](https://youtu.be/YzeLH-xG4Nc)
 
 ## Arquitetura Adotada
 

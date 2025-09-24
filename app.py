@@ -35,7 +35,31 @@ mdb = _mongo_db()
 #           ABAS
 # -----------------------------
 
-tab_cadastro, tab_consulta = st.tabs(["✍️ Cadastro", "🔎 Consultas & Mapa"])
+tab_home, tab_cadastro, tab_consulta, tab_excluir = st.tabs(["Home🏠", "✍️ Cadastro", "🔎 Consultas & Mapa", "🗑️ Excluir Localização"])
+
+# ---------------------------
+#          HOME
+# ---------------------------
+with tab_home:
+    st.title("🌍 Bem-vindo ao GeoPy")
+    st.subheader("👥 Integrantes do Grupo")
+
+    st.markdown("""
+    - **Gustavo Targino Freire Simão** — RGM: *30283647*
+    - **João Vitor Ramos Almeida de Araújo** — RGM: *30081939*
+    """)
+
+    st.markdown("""
+    ---
+    Esta aplicação foi desenvolvida para **gerenciar e visualizar localizações geográficas**.
+    Aqui você pode:
+
+    - **Cadastrar Localizações**: inserir um nome, latitude e longitude para salvar pontos no banco de dados.
+    - **Calcular Distâncias**: selecionar duas localizações cadastradas e obter a distância entre elas.
+    - **Visualizar no Mapa**: os pontos escolhidos são exibidos em um mapa interativo.
+    - **Excluir Localizações**: remover pontos específicos ou todos os pontos do banco de dados.
+    """)
+
 
 # -----------------------------
 #         CADASTRO
@@ -163,3 +187,32 @@ with tab_consulta:
             else:
                 st.warning(f"Não há locais cadastrados em {sel_cidade} ({sel_uf}).")
 
+# ---------------------------
+#        EXCLUIR
+# ---------------------------
+with tab_excluir:
+    st.title("🗑️ Excluir Localização")
+
+    # Buscar locais cadastrados no MongoDB
+    locais_existentes = get_all_locais(mdb)
+    nomes_locais = [loc["nome_local"] for loc in locais_existentes]
+
+    if not nomes_locais:
+        st.warning("Não há localizações para excluir.")
+    else:
+        # Remover uma localização específica
+        st.subheader("Remover uma localização específica")
+        local_para_remover = st.selectbox("Escolha a localização para remover", nomes_locais)
+
+        if st.button(f"Remover '{local_para_remover}'", key="remove_specific"):
+            mdb["locais"].delete_one({"nome_local": local_para_remover})
+            st.success(f"A localização '{local_para_remover}' foi removida com sucesso!")
+            st.rerun()
+
+        st.markdown("---")
+
+        # Remover todas as localizações
+        if st.button("Remover todas as localizações", key="remove_all"):
+            mdb["locais"].delete_many({})
+            st.success("Todas as localizações foram removidas com sucesso!")
+            st.rerun()
